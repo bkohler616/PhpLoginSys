@@ -1,12 +1,5 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: bkohler
- * Date: 4/15/2016
- * Time: 9:22 AM
- */
-?>
-    <HTML>
+<!DOCTYPE HTML>
+<HTML>
 <head>
     <?php
     require_once("cssItems.php");
@@ -46,6 +39,4 @@
 </div>
 </body>
 
-<?php
-require_once("jsItems.php");
-?>
+<?php require_once("jsItems.php"); ?>

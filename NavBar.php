@@ -17,20 +17,32 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="./Index.php">Login Project</a>
+            <a class="navbar-brand" href="#">Login Project</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="./Index.php">Home</a></li>
+                <?php
+                if ($activePage == "Index")
+                    echo "<li class='active'><a href='./Index.php'>Home</a></li>";
+                else
+                    echo "<li><a href='./Index.php'>Home</a></li>";
+                ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <?
-                //Put some php here for login detection.
-                //If logged in: Show hello and link for UserPage
-                //If not, show Login and Sign Up buttons (for now I'll place the buttons)
+                <?php
+                //If a session isn't made, show login/signup stuff.
+                if ($activePage == "Login")
+                    echo "<li class='active'><a href='./Login.php'>Login</a></li>";
+                else
+                    echo "<li><a href='./Login.php'>Login</a></li>";
+                if ($activePage == "Sign Up")
+                    echo "<li class='active'><a href='./SignUp.php'>Sign Up</a></li>";
+                else
+                    echo "<li><a href='./SignUp.php'>Sign Up</a></li>";
+
+                //If a session is made, have a User Page, and Logout button
+                //TODO: Add a session exists check
                 ?>
-                <li><a href="./Login.php">Login</a></li>
-                <li><a href="./SignUp.php">Sign Up</a></li>
             </ul>
         </div>
     </div>
