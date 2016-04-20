@@ -30,25 +30,38 @@ VALUES ('Active'),
   ('Banned'),
   ('Deleted');
 
+CREATE TABLE AccountVisibility (
+  AccountVisibilityID   INT AUTO_INCREMENT,
+  AccountVisibilityText VARCHAR(25) NOT NULL,
+  PRIMARY KEY (AccountVisibilityID)
+);
+
+INSERT INTO AccountVisibility (AccountVisibilityText)
+VALUES ('Private'),
+  ('Public');
+
 CREATE TABLE Users (
-  UserID          INT AUTO_INCREMENT NOT NULL,
-  AccountTypeID   INT                NOT NULL,
-  Username        VARCHAR(30)        NOT NULL,
-  Email           VARCHAR(256),
-  PasswordHash    CHAR(64)           NOT NULL,
-  PasswordSalt    CHAR(10)           NOT NULL,
-  AccountStatusID INT                NOT NULL,
-  DateCreated     DATE               NOT NULL,
+  UserID              INT AUTO_INCREMENT NOT NULL,
+  AccountTypeID       INT                NOT NULL,
+  Username            VARCHAR(30)        NOT NULL,
+  Email               VARCHAR(256),
+  PasswordHash        CHAR(64)           NOT NULL,
+  PasswordSalt        CHAR(10)           NOT NULL,
+  AccountStatusID     INT                NOT NULL,
+  AccountVisibilityID INT                NOT NULL,
+  DateCreated         DATE               NOT NULL,
   PRIMARY KEY (UserID),
   FOREIGN KEY (AccountTypeID) REFERENCES AccountType (AccountTypeID),
-  FOREIGN KEY (AccountStatusID) REFERENCES AccountStatus (AccountStatusID)
+  FOREIGN KEY (AccountStatusID) REFERENCES AccountStatus (AccountStatusID),
+  FOREIGN KEY (AccountVisibilityID) REFERENCES AccountVisibility (AccountVisibilityID)
+
 );
 
 #Generate the super user.
-INSERT INTO Users (AccountTypeID, Username, Email, PasswordHash, PasswordSalt, AccountStatusID, DateCreated)
+INSERT INTO Users (AccountTypeID, Username, Email, PasswordHash, PasswordSalt, AccountStatusID, AccountVisibilityID, DateCreated)
 VALUES (3, 'SuperMan', 'SuperMan@phpProject.crack',
         '794d4b0fb26f63ed17db55b61dc269b36709a6326a5edd0b1d836da50b0ad9d6',
-        'FGHruFkles', 4, '2000-1-1');
+        'FGHruFkles', 4, 1, '2000-1-1');
 
 CREATE TABLE LoginAction (
   LoginActionID INT AUTO_INCREMENT NOT NULL,
