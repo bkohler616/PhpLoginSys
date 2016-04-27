@@ -9,7 +9,7 @@
 <div class="container">
     <form class="form-signin">
         <h2 class="form-signin-heading">Login</h2>
-        <label for="inputEmail" class="sr-only">Username</label>
+        <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="required"
                autofocus="">
         <label for="inputPassword" class="sr-only">Password</label>
