@@ -3,7 +3,7 @@ DROP procedure IF EXISTS `Admin_Profile_Change`;
 
 DELIMITER $$
 USE `phptest`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Admin_Profile_Change`(emailChng INT, accType INT, userN VARCHAR(30), email VARCHAR(256), passW VARCHAR(256), salt CHAR(10), userNChng INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Admin_Profile_Change`(emailChng INT, accType INT, userN VARCHAR(30), email VARCHAR(256), passW VARCHAR(256), salt CHAR(10), userNChng INT, accVis INT)
 BEGIN
 	DECLARE accSalt CHAR(10);
     DECLARE id INT;
@@ -41,8 +41,13 @@ BEGIN
 			UPDATE Users
             SET Username = userN
             WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+		ELSEIF(accVis) THEN
+			UPDATE Users
+			SET AccountVisibilityID = accVis
+            WHERE Username = userN;
         END IF;
     END IF;
 END$$
 
 DELIMITER ;
+
