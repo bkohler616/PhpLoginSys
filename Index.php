@@ -1,3 +1,5 @@
+<?php $activePage = "Index" ?>
+<!DOCTYPE HTML>
 <HTML>
 <head>
     <?php
