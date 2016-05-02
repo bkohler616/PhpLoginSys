@@ -19,7 +19,16 @@
 
             <!-- Table -->
             <table class="table">
-                
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Account Status</th>
+                <th>Account Visibility</th>
+                <th>Date Created</th>
+                <th>Edit *button in column*</th>
+            </tr>
+
             </table>
         </div>
     </div>
