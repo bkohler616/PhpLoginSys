@@ -126,3 +126,170 @@ VALUES ('Unknown Error'),
   ('Invalid Email'),
   ('Invalid Password'),
   ('Session Expired');
+
+
+DROP FUNCTION IF EXISTS `Login_Check`;
+
+DELIMITER $$
+USE phpProject$$
+CREATE DEFINER =`root`@`localhost` FUNCTION `Login_Check`(userN VARCHAR(30), passW VARCHAR(32))
+  RETURNS VARCHAR(64)
+  CHARSET latin1
+  BEGIN
+    DECLARE salt VARCHAR(64);
+    SELECT PasswordSalt
+    FROM Users
+    WHERE Username = userN
+    INTO @salt;
+    IF EXISTS(SELECT Username
+              FROM Users
+              WHERE Username = userN)
+    THEN
+      IF EXISTS(SELECT UserID
+                FROM Users
+                WHERE Username = userN AND PasswordHash = SHA2(CONCAT(@salt, passW), 256))
+      THEN
+        RETURN "Username and password match";
+      ELSE
+        RETURN "Username and password do not match";
+      END IF;
+    ELSE
+      RETURN "Username does not exist";
+    END IF;
+  END$$
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS `Create_User`;
+
+DELIMITER $$
+USE phpProject$$
+CREATE DEFINER =`root`@`localhost` PROCEDURE `Create_User`(IN accType INT, IN userN VARCHAR(30), IN email VARCHAR(256),
+                                                           IN passW   VARCHAR(256), IN salt CHAR(10), IN accVis INT)
+  BEGIN
+    DECLARE nPassW VARCHAR(99);
+    IF (ISNULL(accVis))
+    THEN
+      SET @accVis := 1;
+    END IF;
+
+    SET nPassW = CONCAT(salt, passW);
+    INSERT INTO Users (AccountTypeID, Username, Email, PasswordHash, PasswordSalt, AccountStatusID, DateCreated, AccountVisibilityID)
+    VALUES (accType, userN, email, SHA2(nPassW, 256), salt, 1, CURDATE(), accVis);
+  END$$
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS `Change_Profile`;
+
+DELIMITER $$
+USE phpProject$$
+CREATE DEFINER =`root`@`localhost` PROCEDURE `Change_Profile`(IN emailChng INT, IN userN VARCHAR(30),
+                                                              IN email     VARCHAR(256), IN passW VARCHAR(256),
+                                                              IN accVis    INT)
+  BEGIN
+    DECLARE
+    salt CHAR(10);
+
+    IF (userN)
+    THEN
+      IF (email, passW)
+      THEN
+        UPDATE Users
+        SET Email = email, PasswordHash = SHA2(CONCAT(@salt, passW), 256)
+        WHERE Username = userN;
+      ELSEIF (emailChng)
+        THEN
+          UPDATE Users
+          SET Email = email
+          WHERE Username = userN;
+      ELSEIF (passW)
+        THEN
+          UPDATE Users
+          SET PasswordHash = SHA2(CONCAT(@salt, passW), 256)
+          WHERE Username = userN;
+      ELSEIF (accVis)
+        THEN
+          UPDATE Users
+          SET AccountVisibilityID = accVis
+          WHERE Username = userN;
+      END IF;
+    END IF;
+  END;
+$$
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS `Admin_Profile_Change`;
+
+DELIMITER $$
+USE phpProject$$
+CREATE DEFINER =`root`@`localhost` PROCEDURE `Admin_Profile_Change`(emailChng INT, accType INT, userN VARCHAR(30),
+                                                                    email     VARCHAR(256), passW VARCHAR(256),
+                                                                    salt      CHAR(10), userNChng INT, accVis INT)
+  BEGIN
+    DECLARE accSalt CHAR(10);
+    DECLARE id INT;
+
+    IF (userN)
+    THEN
+      SELECT
+        PasswordSalt,
+        id
+      FROM Users
+      WHERE Username = userN
+      INTO @accSalt, @id;
+
+      IF (accType)
+      THEN
+        UPDATE Users
+        SET AccountTypeID = accType
+        WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+      END IF;
+      IF (emailChng)
+      THEN
+        UPDATE Users
+        SET Email = email
+        WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+      END IF;
+      IF (salt)
+      THEN
+        UPDATE Users
+        SET PasswordSalt = salt
+        WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+      END IF;
+      IF (salt)
+      THEN
+        UPDATE Users
+        SET PasswordSalt = salt
+        WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+        SELECT PasswordSalt
+        FROM Users
+        WHERE Username = userN
+        INTO @accSalt;
+      END IF;
+      IF (passW)
+      THEN
+        UPDATE Users
+        SET PasswordHash = SHA2(CONCAT(@salt, passW), 256)
+        WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+      END IF;
+      IF (userNChng)
+      THEN
+        UPDATE Users
+        SET Username = userN
+        WHERE UserID = @id AND PasswordHash = SHA2(CONCAT(@accSalt, passW), 256);
+      ELSEIF (accVis)
+        THEN
+          UPDATE Users
+          SET AccountVisibilityID = accVis
+          WHERE Username = userN;
+      END IF;
+    END IF;
+  END$$
+
+DELIMITER ;
+
