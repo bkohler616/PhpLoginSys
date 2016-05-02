@@ -57,23 +57,32 @@
             //TODO: Check to see if the regex strings and the originals are the same.
             if ($validInfo) {
 
+
                 // The passwords match
                 $salt = passwordHash();
 
-                $query = mysqli_query($connection, "CALL Create_User(1, '$username', '', '$password', '$salt', 1)");
+                $query = mysqli_query($connection, "SELECT Create_User('$username', '$password', '$salt')");
 
                 if (isset($query)) {
-                    header('Location: http://' . $_SERVER['HTTP_HOST'] . "/PhpLoginSys/Login.php");
+                    $row = mysqli_fetch_assoc($query)["Create_User('$username', '$password', '$salt')"];
+
+                    if ($row == "Username Taken") {
+                        $errorMsg = $errorMsg . "User already exists";
+                        $errorExists = true;
+                    } elseif ($row == "User Added") {
+                        //header('Location: http://' . $_SERVER['HTTP_HOST'] . "/PhpLoginSys/Login.php");
+                    }
+
+                } else {
+                    // Password does not pass the regex.
+                    $errorMsg = $errorMsg . "The password is does not meet password requirements";
+                    $errorExists = true;
                 }
             } else {
-                // Password does not pass the regex.
-                $errorMsg = $errorMsg . "The password is does not meet password requirements";
+                // The passwords do not match
+                $errorMsg = $errorMsg . "The passwords do not match";
                 $errorExists = true;
             }
-        } else {
-            // The passwords do not match
-            $errorMsg = $errorMsg . "The passwords do not match";
-            $errorExists = true;
         }
     }
 

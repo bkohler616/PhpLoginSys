@@ -160,13 +160,31 @@ CREATE DEFINER =`root`@`localhost` FUNCTION `Login_Check`(userN VARCHAR(30), pas
 
 DELIMITER ;
 
-
-DROP PROCEDURE IF EXISTS `Create_User`;
+DROP FUNCTION IF EXISTS `Create_User`;
 
 DELIMITER $$
 USE phpProject$$
-CREATE DEFINER =`root`@`localhost` PROCEDURE `Create_User`(IN accType INT, IN userN VARCHAR(30), IN email VARCHAR(256),
-                                                           IN passW   VARCHAR(256), IN salt CHAR(10), IN accVis INT)
+CREATE DEFINER =`root`@`localhost` FUNCTION `Create_User`(userN VARCHAR(30), passW VARCHAR(32), salt CHAR(10))
+  RETURNS VARCHAR(64)
+  CHARSET latin1
+  BEGIN
+    IF (EXISTS(SELECT Username FROM users WHERE Username = userN) > 0) THEN
+      RETURN "Username Taken";
+    ELSE
+      Call Add_User(1, userN, "", passW, salt, 1);
+      RETURN "User Added";
+    END IF;
+  END$$
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS `Add_User`;
+
+DELIMITER $$
+USE phpProject$$
+CREATE DEFINER =`root`@`localhost` PROCEDURE `Add_User`(IN accType INT, IN userN VARCHAR(30), IN email VARCHAR(256),
+                                                        IN passW   VARCHAR(256), IN salt CHAR(10), IN accVis INT)
   BEGIN
     DECLARE nPassW VARCHAR(99);
     IF (ISNULL(accVis))
