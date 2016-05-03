@@ -35,12 +35,17 @@ function IsLoggedIn()
     return false;
 }
 
+function RedirectToHome(){
+    header('Location: /PhpLoginSys/Index.php');
+}
+
 function RedirectIfLoggedIn()
 {
     StartSessionSafely();
     if (IsLoggedIn())
-        header('Location: /PhpLoginSys/Index.php');
+        RedirectToHome();
 }
+
 
 abstract class AccountType
 {

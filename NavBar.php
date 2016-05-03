@@ -32,7 +32,7 @@
                 <?php
                 StartSessionSafely();
                 if (isset($_SESSION['UserID'])) {
-                    echo "<li><a href='./User.php'>Hello " . $_SESSION['Username'] . "</a></li>";
+                    echo "<li><a href='./User.php?UserID=" . $_SESSION['UserID'] . "'>Hello " . $_SESSION['Username'] . "</a></li>";
                     echo "<li><a href='./Logout.php'>Logout</a></li>";
                 } else {
                     if ($activePage == "Login")
