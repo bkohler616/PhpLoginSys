@@ -39,6 +39,10 @@ function RedirectToHome(){
     header('Location: /PhpLoginSys/Index.php');
 }
 
+function RedirectTo404(){
+    header('Location: /PhpLoginSys/404.php');
+}
+
 function RedirectIfLoggedIn()
 {
     StartSessionSafely();

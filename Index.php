@@ -52,7 +52,7 @@ require_once('phpItems.php'); ?>
                 <div class="caption">
                     <h3>Bootstrap</h3>
                     <p>A framework to design our UI. This is a framework to make responsive design simple.</p>
-                    <p><a href="#" class="btn btn-primary" role="button">Get Bootstrap Here</a></p>
+                    <p><a href="http://getbootstrap.com" class="btn btn-primary" role="button">Get Bootstrap Here</a></p>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@ require_once('phpItems.php'); ?>
                     <p>Github is a host for our project to allow version control, so many people can work on the same
                         project at once.</p>
                     <p><a href="#" class="btn btn-primary" role="button">GitHub Here</a> <a
-                            href="https://github.com/bkohler616/PhpLoginSys.git" class="btn btn-default" role="button">Our
+                            href="https://github.com/bkohler616/PhpLoginSys" class="btn btn-default" role="button">Our
                             Repo</a></p>
                 </div>
             </div>

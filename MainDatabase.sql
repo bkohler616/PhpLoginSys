@@ -40,6 +40,11 @@ INSERT INTO AccountVisibility (AccountVisibilityText)
 VALUES ('Private'),
   ('Public');
 
+/*Connecting items:
+AccountType - AccountTypeText
+AccountStatus - AccountStatusText
+AccountVisibility - AccountVisibilityText
+ */
 CREATE TABLE Users (
   UserID              INT AUTO_INCREMENT NOT NULL,
   AccountTypeID       INT                NOT NULL,

@@ -21,7 +21,8 @@ require_once('phpItems.php'); ?>
 <div class="jumbotron">
     <div class="container">
         <h1>404 - Not Found!</h1>
-        <p>Looks like you stumbled on something that doesn't exist. Sorry 'bout that!</p>
+        <p>Looks like you stumbled on something that doesn't exist. Sorry 'bout that!
+        If you came from a User page, they may be set to private! Keep that in mind!</p>
     </div>
 </div>
 <div class="container">
