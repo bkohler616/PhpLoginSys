@@ -9,7 +9,7 @@
 /**
  * @param $_SESSION array - The session to destroy.
  */
-StartSessionSafely();
+session_start();
 $_SESSION = array();
 unset($_SESSION);
 session_destroy();

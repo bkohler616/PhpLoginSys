@@ -3,6 +3,7 @@ $connection = new mysqli("localhost", "root", "", "phpproject");
 
 $passwordRegex = "/^(?=.*[\\p{Ll}])(?=.*[\\p{Lu}])(?=.*\\d)(?=.*[.?~!@#$%^;*])[\\p{L}\\d\\.?~!@#$%^;*]{8,}/";
 $usernameRegex = "/^(?=.*[a-zA-Z]{1,})(?=.*[\\d]{0,})[a-zA-Z0-9]{5,30}$/";
+$emailRegex = "^([a-z0-9_\\.-]+\\@[\\da-z\\.-]+\\.[a-z\\.]{2,6})$";
 
 /**
  * This will start a session with the username given. Will grab the userID
@@ -11,7 +12,7 @@ $usernameRegex = "/^(?=.*[a-zA-Z]{1,})(?=.*[\\d]{0,})[a-zA-Z0-9]{5,30}$/";
  */
 function Login($username, $connection)
 {
-    $query = mysqli_query($connection, "SELECT * FROM Users WHERE Username = '$username'");
+    $query = mysqli_query($connection, "SELECT UserID, Username, AccountTypeID, AccountStatusID FROM Users WHERE Username = '$username'");
     if (!$query || !isset($query)) die($connection->error);
     $data = $query->fetch_assoc();
     $_SESSION['UserID'] = $data['UserID'];
@@ -21,12 +22,25 @@ function Login($username, $connection)
     header('Location: /PhpLoginSys/Index.php');
 }
 
+function passwordSalt()
+{
+    $salt = chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126));
+    return $salt;
+}
+
+/**
+ * Start the session, ensuring that the session isn't already started.
+ */
 function StartSessionSafely()
 {
     if (session_status() != PHP_SESSION_ACTIVE)
         session_start();
 }
 
+/**
+ * If Userid is set, then assume we are logged in.
+ * @return bool true if logged in.
+ */
 function IsLoggedIn()
 {
     StartSessionSafely();
@@ -35,14 +49,28 @@ function IsLoggedIn()
     return false;
 }
 
+/**
+ * Redirect to the homepage.
+ */
 function RedirectToHome(){
     header('Location: /PhpLoginSys/Index.php');
 }
 
+/**
+ * Redirect to the 404 page. Just used as general redirect for not found.
+ */
 function RedirectTo404(){
     header('Location: /PhpLoginSys/404.php');
 }
 
+function RedirectTo403($reasonOfRedirect)
+{
+    header('Location: /PhpLoginSys/403.php?Reason="' . $reasonOfRedirect . '"');
+}
+
+/**
+ * Redirect to home if already logged in. Useful for signin/singout.
+ */
 function RedirectIfLoggedIn()
 {
     StartSessionSafely();
@@ -51,12 +79,28 @@ function RedirectIfLoggedIn()
 }
 
 
+
 abstract class AccountType
 {
     const Standard = 1;
     const Banned = 2;
     const Administrator = 3;
     const SuperAdministrator = 4;
+
+    static function GetAccountType($accountToReturn)
+    {
+        switch ($accountToReturn) {
+            case AccountType::Standard:
+                return "Standard";
+            case AccountType::Banned:
+                return "Banned";
+            case AccountType::Administrator:
+                return "Administrator";
+            case AccountType::SuperAdministrator:
+                return "Super Admin";
+        }
+        return "error";
+    }
 }
 
 abstract class AccountStatus
@@ -66,20 +110,40 @@ abstract class AccountStatus
     const Suspended = 3;
     const Banned = 4;
     const Deleted = 5;
+
+    static function GetAccountStatus($statusToReturn)
+    {
+        switch ($statusToReturn) {
+            case AccountStatus::Active:
+                return "Active";
+            case AccountStatus::NotRegistered:
+                return "Not Registered";
+            case AccountStatus::Suspended:
+                return "Suspended";
+            case AccountStatus::Banned:
+                return "Banned";
+            case AccountStatus::Deleted:
+                return "Deleted";
+        }
+        return "error";
+    }
 }
 
 abstract class AccountVisibility
 {
     const PrivateAccount = 1;
     const PublicAccount = 2;
-}
 
-abstract class LoginAction
-{
-    const UserLoggedInSuccessfully = 1;
-    const UserLoggedOut = 2;
-    const UserSessionEnded = 3;
-    const AttemptedLoginBadPassword = 4;
+    static function GetAccountVisibility($visibilityToReturn)
+    {
+        switch ($visibilityToReturn) {
+            case AccountVisibility::PrivateAccount:
+                return "Private Account";
+            case AccountVisibility::PublicAccount:
+                return "Public Account";
+        }
+        return "error";
+    }
 }
 
 abstract class UserUpdateAction
@@ -92,5 +156,22 @@ abstract class UserUpdateAction
     const ChangedPasswordEmail = 6;
     const ChangedUsernamePasswordEmail = 7;
     const DeletedAccount = 8;
+}
+
+abstract class Errors
+{
+    const AdminOnly = 1;
+    const PrivateAccount = 2;
+
+    static function GetError($errorToReturn)
+    {
+        switch ($errorToReturn) {
+            case Errors::AdminOnly:
+                return "Admins are allowed there. Not standard users. Sorry.";
+            case Errors::PrivateAccount:
+                return "You attempted to access a private account. Sadly, you do not have the permissions for this";
+        }
+        return "error";
+    }
 }
 ?>

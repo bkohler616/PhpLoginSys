@@ -64,9 +64,9 @@ CREATE TABLE Users (
 
 #Generate the super user.
 INSERT INTO Users (AccountTypeID, Username, Email, PasswordHash, PasswordSalt, AccountStatusID, AccountVisibilityID, DateCreated)
-VALUES (3, 'SuperMan', 'SuperMan@phpProject.crack',
-        '794d4b0fb26f63ed17db55b61dc269b36709a6326a5edd0b1d836da50b0ad9d6',
-        'FGHruFkles', 4, 1, '2000-1-1');
+VALUES (4, 'SuperMan', 'SuperMan@phpProject.crack',
+        '7947c5b676fb48dc824e0c9f751b27bc775c4343edc9bc4d0c7602c43c29990e',
+        'j?(,9F7RbT', 1, 1, '2000-1-1');
 
 CREATE TABLE LoginAction (
   LoginActionID INT AUTO_INCREMENT NOT NULL,

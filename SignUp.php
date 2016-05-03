@@ -99,11 +99,6 @@ RedirectIfLoggedIn();
      * Return - Type: String
      *          Value: The salt in a string form.
      */
-    function passwordSalt()
-    {
-        $salt = chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126));
-        return $salt;
-    }
 
     ?>
     <form class="form-signin" method="post">

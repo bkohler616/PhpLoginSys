@@ -38,7 +38,8 @@ require_once('phpItems.php'); ?>
             <div>
                 <input type="radio" name="accountVisibilityPublic" value=<?php AccountVisibility::PublicAccount ?>>
                 Visible to Other Users<br>
-                <input type="radio" name="accountVisibilityPrivate" value=<?php AccountVisibility::PublicAccount ?>> Not
+                <input type="radio" name="accountVisibilityPrivate" value=<?php AccountVisibility::PrivateAccount ?>>
+                Not
                 Visible to Other Users<br>
             </div>
 
