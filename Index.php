@@ -7,11 +7,9 @@
     ?>
     <? require_once("cssItems.php"); ?>
     <style>
-        /*Comment to sync failed push */
         .navbar {
             margin-bottom: 0;
         }
-
         .col-md-4 {
             margin-bottom: 45px;
         }
