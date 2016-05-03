@@ -32,17 +32,18 @@
             <li>
                 May contain any alpha-numeric characters and the allowed special characters (.?~!@#$%^;*)
             </li>
+            <li>
+                Must have 1 capital letter, 1 number, and 1 special character.
+            </li>
         </ul>
     </div>
     <?php
-    require_once("phpItems.php");
     $errorMsg = "";
     $errorExists = false;
     if (isset($_POST["inputUsername"]) && isset($_POST["inputPassword"]) && isset($_POST["inputPasswordConfirm"])) {
         if ($_POST["inputPassword"] == $_POST["inputPasswordConfirm"]) {
 
             //ReGex checker for the username and password
-            //TODO: Fix the regex so that it can validate the password and username.
             $testUser = preg_match($usernameRegex, $_POST["inputUsername"], $username);
             $testPass = preg_match($passwordRegex, $_POST["inputPassword"], $password);
 
@@ -54,23 +55,20 @@
             $username = $_POST["inputUsername"];
             $password = $_POST["inputPassword"];
 
-            //TODO: Check to see if the regex strings and the originals are the same.
             if ($validInfo) {
-
-
-                // The passwords match
-                $salt = passwordHash();
-
+                // The password passed. Generate salt.
+                $salt = passwordSalt();
+                $password = sha1($password, true);//Preform a quick sha for transfer.
                 $query = mysqli_query($connection, "SELECT Create_User('$username', '$password', '$salt')");
 
                 if (isset($query)) {
                     $row = mysqli_fetch_assoc($query)["Create_User('$username', '$password', '$salt')"];
 
                     if ($row == "Username Taken") {
-                        $errorMsg = $errorMsg . "User already exists";
+                        $errorMsg = $errorMsg . "A user with that username already exists";
                         $errorExists = true;
                     } elseif ($row == "User Added") {
-                        //header('Location: http://' . $_SERVER['HTTP_HOST'] . "/PhpLoginSys/Login.php");
+                        Login($username, $connection);
                     }
 
                 } else {
@@ -98,7 +96,7 @@
      * Return - Type: String
      *          Value: The salt in a string form.
      */
-    function passwordHash()
+    function passwordSalt()
     {
         $salt = chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126)) . chr(mt_rand(33, 126));
         return $salt;

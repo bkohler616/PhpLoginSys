@@ -43,7 +43,7 @@ VALUES ('Private'),
 CREATE TABLE Users (
   UserID              INT AUTO_INCREMENT NOT NULL,
   AccountTypeID       INT                NOT NULL,
-  Username            VARCHAR(30)        NOT NULL,
+  Username            VARCHAR(30) UNIQUE NOT NULL,
   Email               VARCHAR(256),
   PasswordHash        CHAR(64)           NOT NULL,
   PasswordSalt        CHAR(10)           NOT NULL,
@@ -112,21 +112,6 @@ CREATE TABLE UserUpdateLog (
   FOREIGN KEY (UserEditing) REFERENCES Users (UserID),
   FOREIGN KEY (ActionID) REFERENCES UpdateAction (UpdateActionID)
 );
-
-CREATE TABLE LoginStatusMessages (
-  MessageID   INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  MessageText VARCHAR(180)       NOT NULL
-);
-
-INSERT INTO LoginStatusMessages (MessageText)
-VALUES ('Unknown Error'),
-  ('Password Fail'),
-  ('Account Does Not Exist'),
-  ('Invalid Username'),
-  ('Invalid Email'),
-  ('Invalid Password'),
-  ('Session Expired');
-
 
 DROP FUNCTION IF EXISTS `Login_Check`;
 
@@ -310,4 +295,3 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `Admin_Profile_Change`(emailChng IN
   END$$
 
 DELIMITER ;
-

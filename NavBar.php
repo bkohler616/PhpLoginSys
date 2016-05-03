@@ -5,7 +5,7 @@
  * Date: 4/14/2016
  * Time: 10:03 AM
  */
-
+require_once('phpItems.php');
 ?>
 <nav class="navbar navbar-default navbar-static-top navbar-inverse">
     <div class="container">
@@ -30,18 +30,20 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <?php
-                //If a session isn't made, show login/signup stuff.
-                if ($activePage == "Login")
-                    echo "<li class='active'><a href='./Login.php'>Login</a></li>";
-                else
-                    echo "<li><a href='./Login.php'>Login</a></li>";
-                if ($activePage == "Sign Up")
-                    echo "<li class='active'><a href='./SignUp.php'>Sign Up</a></li>";
-                else
-                    echo "<li><a href='./SignUp.php'>Sign Up</a></li>";
-
-                //If a session is made, have a User Page, and Logout button
-                //TODO: Add a session exists check
+                session_start();
+                if (isset($_SESSION['UserID'])) {
+                    echo "<li><a href='./User.php'>Hello " . $_SESSION['Username'] . "</a></li>";
+                    echo "<li><a href='./Logout.php'>Logout</a></li>";
+                } else {
+                    if ($activePage == "Login")
+                        echo "<li class='active'><a href='./Login.php'>Login</a></li>";
+                    else
+                        echo "<li><a href='./Login.php'>Login</a></li>";
+                    if ($activePage == "Sign Up")
+                        echo "<li class='active'><a href='./SignUp.php'>Sign Up</a></li>";
+                    else
+                        echo "<li><a href='./SignUp.php'>Sign Up</a></li>";
+                }
                 ?>
             </ul>
         </div>
