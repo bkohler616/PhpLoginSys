@@ -47,24 +47,24 @@
 
     <div class="row">
         <h1>Here's some technologies we used...</h1>
-        <div class="col-sm-6 col-md-4">
+        <div class="col-md-4">
             <div class="thumbnail">
                 <img src="Images/Bootstrap-logo.jpg" width="175" height="175" alt="Bootstrap">
                 <div class="caption">
                     <h3>Bootstrap</h3>
-                    <p>A </p>
+                    <p>A framework to design our UI. This is a framework to make responsive design simple.</p>
                     <p><a href="#" class="btn btn-primary" role="button">Get Bootstrap Here</a></p>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-md-4">
+        <div class="col-md-4">
             <div class="thumbnail">
                 <img src="Images/Github-logo.png" width="175" height="175" alt="Github">
                 <div class="caption">
                     <h3>GitHub</h3>
-                    <p>Here is a bunch of test to simulate text that I might have in the this section. Its useless text
-                        but it needs to be here!</p>
+                    <p>Github is a host for our project to allow version control, so many people can work on the same
+                        project at once.</p>
                     <p><a href="#" class="btn btn-primary" role="button">GitHub Here</a> <a
                             href="https://github.com/bkohler616/PhpLoginSys.git" class="btn btn-default" role="button">Our
                             Repo</a></p>
@@ -72,13 +72,13 @@
             </div>
         </div>
 
-        <div class="col-sm-6 col-md-4">
+        <div class="col-md-4">
             <div class="thumbnail">
                 <img src="Images/MySQL-logo.jpg" width="175" height="175" alt="MySql">
                 <div class="caption">
                     <h3>MySQL</h3>
-                    <p>Here is a bunch of test to simulate text that I might have in the this section. Its useless text
-                        but it needs to be here!</p>
+                    <p>MySql is our database of choice for simplicity. It's built into WAMP and has many tools for it to
+                        use.</p>
                     <p><a href="https://www.mysql.com" class="btn btn-primary" role="button">MySQL Here</a></p>
                 </div>
             </div>
