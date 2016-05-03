@@ -1,4 +1,6 @@
-<?php $activePage = "Login"; ?>
+<?php $activePage = "Login";
+require_once('phpItems.php');
+RedirectIfLoggedIn(); ?>
 <!DOCTYPE HTML>
 <HTML>
 <head>
@@ -8,8 +10,6 @@
 <?php require_once("NavBar.php"); ?>
 <div class="container">
     <?php
-
-
     // Username : Password
     // test : test
     $errorMsg = "";

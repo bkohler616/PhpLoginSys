@@ -1,3 +1,5 @@
+<?php $activePage = "UserListing";
+require_once('phpItems.php'); ?>
 <!DOCTYPE HTML>
 <HTML>
 <head>

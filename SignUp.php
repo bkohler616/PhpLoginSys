@@ -1,4 +1,7 @@
-<?php $activePage = "Sign Up"; ?>
+<?php $activePage = "Sign Up";
+require_once('phpItems.php');
+RedirectIfLoggedIn();
+?>
 <!DOCTYPE HTML>
 <HTML>
 <head>

@@ -13,13 +13,33 @@ function Login($username, $connection)
 {
     $query = mysqli_query($connection, "SELECT * FROM Users WHERE Username = '$username'");
     if (!$query || !isset($query)) die($connection->error);
-    session_start();
     $data = $query->fetch_assoc();
     $_SESSION['UserID'] = $data['UserID'];
     $_SESSION['Username'] = $data['Username'];
     $_SESSION['AccountTypeID'] = $data['AccountTypeID'];
     $_SESSION['AccountStatusID'] = $data['AccountStatusID'];
     header('Location: /PhpLoginSys/Index.php');
+}
+
+function StartSessionSafely()
+{
+    if (session_status() != PHP_SESSION_ACTIVE)
+        session_start();
+}
+
+function IsLoggedIn()
+{
+    StartSessionSafely();
+    if (isset($_SESSION['UserID']))
+        return true;
+    return false;
+}
+
+function RedirectIfLoggedIn()
+{
+    StartSessionSafely();
+    if (IsLoggedIn())
+        header('Location: /PhpLoginSys/Index.php');
 }
 
 abstract class AccountType

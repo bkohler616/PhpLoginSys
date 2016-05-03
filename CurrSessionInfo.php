@@ -5,7 +5,8 @@
  * Date: 5/2/2016
  * Time: 8:26 PM
  */
-session_start();
+require_once('phpItems.php');
+StartSessionSafely();
 
 echo "UserID: " . $_SESSION['UserID'];
 echo "\nUsername: " . $_SESSION['Username'];

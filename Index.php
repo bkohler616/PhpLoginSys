@@ -1,4 +1,5 @@
-<?php $activePage = "Index" ?>
+<?php $activePage = "Index";
+require_once('phpItems.php'); ?>
 <!DOCTYPE HTML>
 <HTML>
 <head>

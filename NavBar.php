@@ -5,7 +5,7 @@
  * Date: 4/14/2016
  * Time: 10:03 AM
  */
-require_once('phpItems.php');
+
 ?>
 <nav class="navbar navbar-default navbar-static-top navbar-inverse">
     <div class="container">
@@ -30,7 +30,7 @@ require_once('phpItems.php');
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <?php
-                session_start();
+                StartSessionSafely();
                 if (isset($_SESSION['UserID'])) {
                     echo "<li><a href='./User.php'>Hello " . $_SESSION['Username'] . "</a></li>";
                     echo "<li><a href='./Logout.php'>Logout</a></li>";

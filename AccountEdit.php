@@ -1,3 +1,5 @@
+<?php $activePage = "accountEdit";
+require_once('phpItems.php'); ?>
 <!DOCTYPE HTML>
 <HTML>
 <head>
@@ -34,8 +36,10 @@
 
             <br>Account Visibility
             <div>
-                <input type="radio" name="accountVisibility" value=1> Visible to Other Users<br>
-                <input type="radio" name="accountVisibility" value=0> Not Visible to Other Users<br>
+                <input type="radio" name="accountVisibilityPublic" value=<?php AccountVisibility::PublicAccount ?>>
+                Visible to Other Users<br>
+                <input type="radio" name="accountVisibilityPrivate" value=<?php AccountVisibility::PublicAccount ?>> Not
+                Visible to Other Users<br>
             </div>
 
             <br>*Current Password required to update account*
