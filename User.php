@@ -1,4 +1,6 @@
 <?php
+$activePage = "User";
+
 /**
  * Created by PhpStorm.
  * User: bkohler
@@ -8,6 +10,7 @@
 require_once('phpItems.php');
 StartSessionSafely();
 $allowedAccess = false;
+
 if(isset($_GET['UserID']))
 {
 
@@ -15,7 +18,7 @@ if(isset($_GET['UserID']))
     {
         $allowedAccess = true;
     }
-    else{
+    else {
         $query = mysqli_query($connection, "SELECT AccountVisibilityID FROM Users WHERE UserID = " . $_SESSION['UserID']);
         if (!$query || !isset($query)) die($connection->error);
         $data = $query->fetch_assoc();
@@ -37,9 +40,7 @@ if(isset($_GET['UserID']))
 
 //Should be able to see information now. Spool up info.
 
-$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated".
-                                    "FROM Users" .
-                                    "WHERE UserID = " . intval($_SESSION['UserID']) . ";");
+$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated FROM Users WHERE" . $_SESSION['UserID']);
 if (!$query || !isset($query)) die($connection->error);
 $data = $query->fetch_assoc();
 ?>
