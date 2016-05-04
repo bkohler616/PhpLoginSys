@@ -29,7 +29,6 @@ elseif ($_SESSION['AccountTypeID'] == AccountType::SuperAdministrator && $_GET['
 else
     RedirectTo403(Errors::AdminOnly);
 
-
 if (isset($_POST['changingUserID'])) {
     //Validate if password is okay.
     $password = $_POST['currentPassword'];
@@ -132,8 +131,29 @@ if ($IsPasswordConfirmed) {
     $query = $query . "WHERE UserID=" . $_POST['changingUserID'];
     $query = mysqli_query($connection, $query) Or die("No Query String");
 
+    LoginNoRedir($_SESSION['Username'], $connection);
 }
 
+//Re-evaluate information.
+
+$IsAllowedAccess = false;
+$IsOwnAccount = false;
+$UserIsAdmin = false;
+$UserIsSelfSuper = false;
+//Make a quick query to gather the information. Might as well grab it all just in case.
+$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated FROM Users WHERE UserID = " . $_GET['UserID']);
+if (!isset($query) || !$query) die($connection->error);
+$data = $query->fetch_assoc();
+
+if (($_SESSION['AccountTypeID'] > $data['AccountTypeID'] && $_SESSION['AccountTypeID'] != AccountType::Standard))
+    $UserIsAdmin = true;
+elseif ($_SESSION['AccountTypeID'] == AccountType::SuperAdministrator && $_GET['UserID'] == $_SESSION['UserID']) {
+    $UserIsAdmin = true;
+    $UserIsSelfSuper = true;
+} elseif ($_SESSION['UserID'] == $_GET['UserID'])
+    $IsOwnAccount = true;
+else
+    RedirectTo403(Errors::AdminOnly);
 
 ?>
 <!DOCTYPE HTML>

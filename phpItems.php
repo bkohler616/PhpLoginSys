@@ -12,6 +12,7 @@ $emailRegex = "/([A-Za-z0-9]|[-!$%^&*()_+|~=`\\[\\]:@#.\\/])/";
  */
 function Login($username, $connection)
 {
+    StartSessionSafely();
     $query = mysqli_query($connection, "SELECT UserID, Username, AccountTypeID, AccountStatusID FROM Users WHERE Username = '$username'");
     if (!$query || !isset($query)) die($connection->error);
     $data = $query->fetch_assoc();
@@ -21,6 +22,19 @@ function Login($username, $connection)
     $_SESSION['AccountStatusID'] = $data['AccountStatusID'];
     header('Location: /PhpLoginSys/Index.php');
 }
+
+function LoginNoRedir($username, $connection)
+{
+    StartSessionSafely();
+    $query = mysqli_query($connection, "SELECT UserID, Username, AccountTypeID, AccountStatusID FROM Users WHERE Username = '$username'");
+    if (!$query || !isset($query)) die($connection->error);
+    $data = $query->fetch_assoc();
+    $_SESSION['UserID'] = $data['UserID'];
+    $_SESSION['Username'] = $data['Username'];
+    $_SESSION['AccountTypeID'] = $data['AccountTypeID'];
+    $_SESSION['AccountStatusID'] = $data['AccountStatusID'];
+}
+
 
 function passwordSalt()
 {
