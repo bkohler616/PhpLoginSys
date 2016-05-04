@@ -58,9 +58,11 @@ function RedirectToHome(){
 
 /**
  * Redirect to the 404 page. Just used as general redirect for not found.
+ * @param $reasonOfRedirect int - The reason for redirect. Use Errors enum values.
  */
-function RedirectTo404(){
-    header('Location: /PhpLoginSys/404.php');
+function RedirectTo404($reasonOfRedirect)
+{
+    header('Location: /PhpLoginSys/404.php?Reason="' . $reasonOfRedirect . '"');
 }
 
 function RedirectTo403($reasonOfRedirect)
@@ -162,6 +164,9 @@ abstract class Errors
 {
     const AdminOnly = 1;
     const PrivateAccount = 2;
+    const NotLoggedIn = 3;
+    const UserDoesNotExist = 4;
+    const UserNotGiven = 5;
 
     static function GetError($errorToReturn)
     {
@@ -170,6 +175,12 @@ abstract class Errors
                 return "Admins are allowed there. Not standard users. Sorry.";
             case Errors::PrivateAccount:
                 return "You attempted to access a private account. Sadly, you do not have the permissions for this";
+            case Errors::NotLoggedIn:
+                return "You are not logged in, so you cannot see this page. Please login.";
+            case Errors::UserDoesNotExist:
+                return "The user account provided doesn't exist.";
+            case Errors::UserNotGiven:
+                return "A user was not provided.";
         }
         return "error";
     }

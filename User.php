@@ -97,7 +97,7 @@ $data = $query->fetch_assoc();
                     echo "<a class='btn btn-primary' href='./AccountEdit.php?UserID=" . $data['UserID'] . "'>Edit This account &rightarrow;</a></br></br>";
                     echo "<a class='btn btn-primary' href='./UserListing.php'>Return to user listing</a>";
                 } else if ($IsOwnPage) {
-                    echo "<a class='btn btn-primary' href='./AccountEdit?UserID=" . $data['UserID'] . "'>Edit This account &rightarrow;</a>";
+                    echo "<a class='btn btn-primary' href='./AccountEdit.php?UserID=" . $data['UserID'] . "'>Edit This account &rightarrow;</a>";
                 }
                 ?>
             </div>

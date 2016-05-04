@@ -85,22 +85,14 @@ RedirectIfLoggedIn();
                 $errorExists = true;
             }
         }
-    }
+    } ?>
+    <?php if ($errorExists) { ?>
+        echo "
+        <div class='alert alert-danger' role='alert'>
+            Error: <?php echo $errorMsg ?>
+        </div>
 
-    if ($errorExists) {
-        echo "<div class='alert alert-danger' role='alert'>";
-        echo "Error: " . $errorMsg;
-        echo "</div>";
-
-    }
-
-    /*
-     * Generate a password salt that is ten characters long
-     * Return - Type: String
-     *          Value: The salt in a string form.
-     */
-
-    ?>
+    <?php } ?>
     <form class="form-signin" method="post">
         <h2 class="form-signin-heading">Sign Up</h2>
         <label for="inputUsername" class="sr-only">Username</label>

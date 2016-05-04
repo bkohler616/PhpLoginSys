@@ -12,8 +12,8 @@ CREATE TABLE AccountType (
 );
 
 INSERT INTO AccountType (AccountTypeText)
-VALUES ('Standard'),
-  ('Banned'),
+VALUES ('Banned'),
+  ('Standard'),
   ('Administrator'),
   ('Super Administrator');
 
@@ -161,8 +161,28 @@ CREATE DEFINER =`root`@`localhost` FUNCTION `Create_User`(userN VARCHAR(30), pas
     IF (EXISTS(SELECT Username FROM users WHERE Username = userN) > 0) THEN
       RETURN "Username Taken";
     ELSE
-      Call Add_User(1, userN, "", passW, salt, 1);
+      CALL Add_User(2, userN, "", passW, salt, 1);
       RETURN "User Added";
+    END IF;
+  END$$
+
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS `Check_User_Existence`;
+
+DELIMITER $$
+USE phpProject$$
+CREATE DEFINER =`root`@`localhost` FUNCTION `Check_User_Existence`(userN VARCHAR(30))
+  RETURNS VARCHAR(64)
+  CHARSET latin1
+  BEGIN
+    IF (EXISTS(SELECT Username
+               FROM users
+               WHERE Username = userN) > 0)
+    THEN
+      RETURN "Username Taken";
+    ELSE
+      RETURN "Username Available";
     END IF;
   END$$
 

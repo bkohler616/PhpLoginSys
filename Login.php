@@ -61,9 +61,13 @@ RedirectIfLoggedIn(); ?>
             if ($testPass == 0)
                 $errorMsg = $errorMsg . "\nInvalid password";
         }
-    }
+    } ?>
+    <?php if ($errorExists) { ?>
+        <div class='alert alert-danger' role='alert'>
+            Error: <?php echo $errorMsg ?>
+        </div>
 
-    ?>
+    <?php } ?>
     <form class="form-signin" method="POST">
         <h2 class="form-signin-heading">Login</h2>
         <label for="inputUsername" class="sr-only">Username</label>
