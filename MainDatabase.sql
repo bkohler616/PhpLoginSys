@@ -330,7 +330,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `Pass_Check`(userID INT, passW VARCHA
 BEGIN
 	Declare retPass VarCHAr(64);
   UPDATE Users
-  SET Users.PasswordHash = SHA2(CONCAT(salt, passW), 256), users.PasswordSalt = salt
+  SET PasswordHash = SHA2(CONCAT(salt, passW), 256), PasswordSalt = salt
   WHERE UserID = userID;
     SELECT PasswordHash FROM Users WHERE UserID = userID INTO retPass;
 
