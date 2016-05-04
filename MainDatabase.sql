@@ -327,7 +327,7 @@ CREATE FUNCTION Pass_Check(userID INT, passW VARCHAR(32), salt CHAR(10))
   RETURNS VARCHAR(64)
   BEGIN
     UPDATE Users
-    SET PasswordHash = SHA2(CONCAT(salt, passW), 256)
+    SET PasswordHash = SHA2(CONCAT(salt, passW), 256), PasswordSalt = salt
     WHERE UserID = userID;
     RETURN 1;
   END

@@ -73,49 +73,55 @@ if ($IsPasswordConfirmed) {
 
 
     $query = "UPDATE Users SET UserID=" . $_POST['changingUserID'] . ", ";
-    if (isset($_POST['changeUsername']) && $_POST['changeUsername'] == '1') {
-        $testUser = preg_match($usernameRegex, $_POST["inputUsername"]);
-        if ($testUser == 1) {
-            $query = $query . "Username='" . $_POST["inputUsername"] . "', ";
-        } else {
-            $errorMsg = $errorMsg . "\nUsername invalid";
-            $errorExists = true;
-            $addedInfo = false;
-        }
-    }
-    if (isset($_POST['changeEmail']) && $_POST['changeEmail'] == '1') {
-        $errorMsg = $errorMsg . "\nChanging Email...";
-        $testEmail = preg_match($emailRegex, $_POST['inputEmail']);
-        if ($testEmail == 1) {
-            $query = $query . "Email='" . $_POST['inputEmail'] . "', ";
-        } else {
-            $errorMsg = $errorMsg . "\nEmail Invalid";
-            $errorExists = true;
-            $addedInfo = false;
-        }
-    }
-    if (isset($_POST['changePassword']) && $_POST['changePassword'] == '1') {
-        $errorMsg = $errorMsg . "\nChanging Password...";
-        if ($_POST['inputConfirmPassword'] == $_POST['inputNewPassword']) {
-            $testPassword = preg_match($passwordRegex, $_POST['inputNewPassword']);
-            if ($testPassword == 1) {
-                $salt = passwordSalt();
-                $password = sha1($_POST['inputNewPassword'], true);
-                $userID = $_POST['changingUserID'];
-                $passQuery = mysqli_query($connection, "SELECT Pass_Check($userID, '$password', $salt'");
-                if ($passQuery == 1) {
-                    $errorMsg = "\nPassword Query succeeded.";
-                    $errorExists = true;
-                }
+    if (isset($_POST['checkbox'])) {
+        $errorMsg = $errorMsg . "\ncheckbox is set!";
+        if (in_array('username', $_POST['checkbox'])) {
+            $testUser = preg_match($usernameRegex, $_POST["inputUsername"]);
+            if ($testUser == 1) {
+                $query = $query . "Username='" . $_POST["inputUsername"] . "', ";
             } else {
-                $errorMsg = $errorMsg . "\nPassword invalid.";
+                $errorMsg = $errorMsg . "\nUsername invalid";
                 $errorExists = true;
                 $addedInfo = false;
             }
-        } else {
-            $errorMsg = $errorMsg . "\nPasswords did not match.";
-            $errorExists = true;
-            $addedInfo = false;
+        }
+        if (in_array('email', $_POST['checkbox'])) {
+            $errorMsg = $errorMsg . "\nChanging Email...";
+            $testEmail = preg_match($emailRegex, $_POST['inputEmail']);
+            if ($testEmail == 1) {
+                $query = $query . "Email='" . $_POST['inputEmail'] . "', ";
+            } else {
+                $errorMsg = $errorMsg . "\nEmail Invalid: " . $testEmail;
+                $errorExists = true;
+                $addedInfo = false;
+            }
+        }
+        if (in_array('password', $_POST['checkbox'])) {
+            $errorMsg = $errorMsg . "\nChanging Password...";
+            if ($_POST['inputConfirmPassword'] == $_POST['inputNewPassword']) {
+                $testPassword = preg_match($passwordRegex, $_POST['inputNewPassword']);
+                if ($testPassword == 1) {
+                    $salt = passwordSalt();
+                    $password = sha1($_POST['inputNewPassword'], true);
+                    $userID = $_POST['changingUserID'];
+                    $passQuery = mysqli_query($connection, "SELECT Pass_Check($userID, '$password', $salt'");
+                    if ($passQuery == 1) {
+                        $errorMsg = "\nPassword Query succeeded.";
+                        $errorExists = true;
+                    } else {
+                        $errorMsg = "\nPassword Query failed: " . $passQuery;
+                        $errorExists = true;
+                    }
+                } else {
+                    $errorMsg = $errorMsg . "\nPassword invalid.";
+                    $errorExists = true;
+                    $addedInfo = false;
+                }
+            } else {
+                $errorMsg = $errorMsg . "\nPasswords did not match.";
+                $errorExists = true;
+                $addedInfo = false;
+            }
         }
     }
     if ($UserIsSelfSuper) {
@@ -130,7 +136,7 @@ if ($IsPasswordConfirmed) {
 
     $query = $query . "WHERE UserID=" . $_POST['changingUserID'];
     $errorExists = true;
-    $errorMsg = "\nGenerated Query: '" . $query . "'";
+    $errorMsg = $errorMsg . "\nGenerated Query: '" . $query . "'";
     $query = mysqli_query($connection, $query) Or die("No Query String");
 }
 
@@ -165,7 +171,7 @@ if ($IsPasswordConfirmed) {
             <label class="form-item-heading" for="changeUsername"> Change Username: </label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changeUsername" value="1">
+                    <input type="checkbox" name="checkbox[]" value="username">
                 </span>
                 <input type="text" name="inputUsername" class="form-control" placeholder="Username"
                        value="<?php echo $data['Username'] ?>">
@@ -174,7 +180,7 @@ if ($IsPasswordConfirmed) {
             <label class="form-item-heading" for="inputEmail">Change Email:</label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changeEmail" value="1">
+                    <input type="checkbox" name="checkbox[]" value="email">
                 </span>
                 <input type="email" name="inputEmail" class="form-control" placeholder="Email"
                        value="<?php echo $data['Email'] ?>">
@@ -183,7 +189,7 @@ if ($IsPasswordConfirmed) {
             <label class="form-item-heading" for="inputPassword">Change Password:</label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changePassword" value="1">
+                    <input type="checkbox" name="checkbox[]" value="password">
                 </span>
                 <input type="password" name="inputNewPassword" class="form-control" placeholder="New Password">
             </div>

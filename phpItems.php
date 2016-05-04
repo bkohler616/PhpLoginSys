@@ -3,7 +3,7 @@ $connection = new mysqli("localhost", "root", "", "phpproject");
 
 $passwordRegex = "/^(?=.*[\\p{Ll}])(?=.*[\\p{Lu}])(?=.*\\d)(?=.*[.?~!@#$%^;*])[\\p{L}\\d\\.?~!@#$%^;*]{8,}/";
 $usernameRegex = "/^(?=.*[a-zA-Z]{1,})(?=.*[\\d]{0,})[a-zA-Z0-9]{5,30}$/";
-$emailRegex = "/^([a-z0-9_\\.-]+\\@[\\da-z\\.-]+\\.[a-z\\.]{2,6})$/";
+$emailRegex = "/([A-Za-z0-9]|[-!$%^&*()_+|~=`\\[\\]:@#.\\/])/";
 
 /**
  * This will start a session with the username given. Will grab the userID
