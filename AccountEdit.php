@@ -74,7 +74,6 @@ if ($IsPasswordConfirmed) {
 
     $query = "UPDATE Users SET UserID=" . $_POST['changingUserID'] . ", ";
     if (isset($_POST['checkbox'])) {
-        $errorMsg = $errorMsg . "\ncheckbox is set!";
         if (in_array('username', $_POST['checkbox'])) {
             $testUser = preg_match($usernameRegex, $_POST["inputUsername"]);
             if ($testUser == 1) {
@@ -86,7 +85,6 @@ if ($IsPasswordConfirmed) {
             }
         }
         if (in_array('email', $_POST['checkbox'])) {
-            $errorMsg = $errorMsg . "\nChanging Email...";
             $testEmail = preg_match($emailRegex, $_POST['inputEmail']);
             if ($testEmail == 1) {
                 $query = $query . "Email='" . $_POST['inputEmail'] . "', ";
@@ -97,19 +95,16 @@ if ($IsPasswordConfirmed) {
             }
         }
         if (in_array('password', $_POST['checkbox'])) {
-            $errorMsg = $errorMsg . "\nChanging Password...";
             if ($_POST['inputConfirmPassword'] == $_POST['inputNewPassword']) {
                 $testPassword = preg_match($passwordRegex, $_POST['inputNewPassword']);
                 if ($testPassword == 1) {
                     $salt = passwordSalt();
                     $password = sha1($_POST['inputNewPassword'], true);
                     $userID = $_POST['changingUserID'];
-                    $passQuery = mysqli_query($connection, "SELECT Pass_Check($userID, '$password', $salt'");
-                    if (isset($passQuery) && !$passQuery) {
-                        $errorMsg = $errorMsg . "\nPassword Query succeeded: " . $passQuery;
-                        $errorExists = true;
+                    $passQuery = mysqli_query($connection, "SELECT Pass_Check('$userID', '$password', '$salt')");
+                    if (isset($passQuery)) {
                     } else {
-                        $errorMsg = $errorMsg . "\nPassword Query failed: " . $passQuery;
+                        $errorMsg = $errorMsg . "\nPassword Query failed.";
                         $errorExists = true;
                     }
                 } else {
@@ -135,9 +130,8 @@ if ($IsPasswordConfirmed) {
     }
 
     $query = $query . "WHERE UserID=" . $_POST['changingUserID'];
-    $errorExists = true;
-    $errorMsg = $errorMsg . "\nGenerated Query: '" . $query . "'";
     $query = mysqli_query($connection, $query) Or die("No Query String");
+
 }
 
 
