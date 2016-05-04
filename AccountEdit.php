@@ -14,6 +14,7 @@ if (isset($_POST['changingUserID'])) {
         $validInfo = true;
     }
     if ($validInfo) {
+        $password = sha1($password, true);
         $username = $_SESSION['Username'];
         $query = mysqli_query($connection, "SELECT Login_Check('$username', '$password')") Or die("No Query String");
         if (isset($query)) {
@@ -39,9 +40,64 @@ if (isset($_POST['changingUserID'])) {
 
 }
 if ($IsPasswordConfirmed) {
-    $errorExists = true;
-    $errorMsg = "password confirmed!";
+    $changeUsername = false;
+    $changeEmail = false;
+    $changePassword = false;
+    $addedInfo = false;
 
+
+    $query = "UPDATE Users SET UserID=" . $_POST['changingUserID'] . ", ";
+    if (isset($_POST['changeUsername'])) {
+        $testUser = preg_match($usernameRegex, $_POST["inputUsername"]);
+        if ($testUser == 1) {
+            $query = $query . "Username='" . $_POST["inputUsername"] . "', ";
+        } else {
+            $errorMsg = $errorMsg . "\nUsername invalid";
+            $errorExists = true;
+            $addedInfo = false;
+        }
+    }
+    if (isset($_POST['changeEmail'])) {
+        $errorMsg = $errorMsg . "\nChanging Email...";
+        $testEmail = preg_match($emailRegex, $_POST['inputEmail']);
+        if ($testEmail == 1) {
+            $query = $query . "Email='" . $_POST['inputEmail'] . "', ";
+        } else {
+            $errorMsg = $errorMsg . "\nEmail Invalid";
+            $errorExists = true;
+            $addedInfo = false;
+        }
+    }
+    if (isset($_POST['changePassword'])) {
+        $errorMsg = $errorMsg . "\nChanging Password...";
+        if ($_POST['inputConfirmPassword'] == $_POST['inputNewPassword']) {
+            $testPassword = preg_match($passwordRegex, $_POST['inputNewPassword']);
+            if ($testPassword == 1) {
+                $salt = passwordSalt();
+                $password = sha1($_POST['inputNewPassword'], true);
+                $userID = $_POST['changingUserID'];
+                $passQuery = mysqli_query($connection, "SELECT Pass_Check($userID, '$password', $salt'");
+                if ($passQuery == 1) {
+                    $errorMsg = "\nPassword Query succeeded.";
+                    $errorExists = true;
+                }
+            } else {
+                $errorMsg = $errorMsg . "\nPassword invalid.";
+                $errorExists = true;
+                $addedInfo = false;
+            }
+        } else {
+            $errorMsg = $errorMsg . "\nPasswords did not match.";
+            $errorExists = true;
+            $addedInfo = false;
+        }
+    }
+    $query = $query . "AccountStatusID=" . $_POST['accountStatus'] . ", AccountVisibilityID=" .
+        $_POST['accountVisibility'] . ", AccountTypeID=" . $_POST['accountType'] . " ";
+    $query = $query . "WHERE UserID=" . $_POST['changingUserID'];
+    $errorExists = true;
+    $errorMsg = "\nGenerated Query: '" . $query . "'";
+    $query = mysqli_query($connection, $query) Or die("No Query String");
 }
 
 if (!isset($_GET['UserID']))
@@ -115,10 +171,10 @@ else
                        value="<?php echo $data['Email'] ?>">
             </div>
 
-            <label class="form-item-heading" for="inputEmail">Change Password:</label>
+            <label class="form-item-heading" for="inputPassword">Change Password:</label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changeEmail">
+                    <input type="checkbox" name="changePassword">
                 </span>
                 <input type="password" name="inputNewPassword" class="form-control" placeholder="New Password">
             </div>
