@@ -84,8 +84,8 @@ function RedirectIfLoggedIn()
 
 abstract class AccountType
 {
-    const Standard = 1;
-    const Banned = 2;
+    const Banned = 1;
+    const Standard = 2;
     const Administrator = 3;
     const SuperAdministrator = 4;
 

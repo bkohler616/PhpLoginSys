@@ -6,7 +6,8 @@ $errorMsg = "";
 $IsPasswordConfirmed = false;
 if (isset($_POST['changingUserID'])) {
     //Validate if password is okay.
-    $testPass = preg_match($passwordRegex, $_POST["currentPassword"], $password);
+    $password = $_POST['currentPassword'];
+    $testPass = preg_match($passwordRegex, $_POST["currentPassword"]);
 
     $validInfo = false;
     if ($testPass == 1) {
