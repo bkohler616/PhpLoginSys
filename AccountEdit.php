@@ -1,9 +1,35 @@
 <?php $activePage = "accountEdit";
 require_once('phpItems.php');
 StartSessionSafely();
+if (!isset($_GET['UserID']))
+    RedirectTo404(Errors::UserNotGiven);
+if (!isset($_SESSION['UserID']))
+    RedirectTo403(Errors::NotLoggedIn);
+//User should be logged in from here on.
 $errorExists = false;
 $errorMsg = "";
 $IsPasswordConfirmed = false;
+//User should be logged in from here on.
+$IsAllowedAccess = false;
+$IsOwnAccount = false;
+$UserIsAdmin = false;
+$UserIsSelfSuper = false;
+//Make a quick query to gather the information. Might as well grab it all just in case.
+$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated FROM Users WHERE UserID = " . $_GET['UserID']);
+if (!isset($query) || !$query) die($connection->error);
+$data = $query->fetch_assoc();
+
+if (($_SESSION['AccountTypeID'] > $data['AccountTypeID'] && $_SESSION['AccountTypeID'] != AccountType::Standard))
+    $UserIsAdmin = true;
+elseif ($_SESSION['AccountTypeID'] == AccountType::SuperAdministrator && $_GET['UserID'] == $_SESSION['UserID']) {
+    $UserIsAdmin = true;
+    $UserIsSelfSuper = true;
+} elseif ($_SESSION['UserID'] == $_GET['UserID'])
+    $IsOwnAccount = true;
+else
+    RedirectTo403(Errors::AdminOnly);
+
+
 if (isset($_POST['changingUserID'])) {
     //Validate if password is okay.
     $password = $_POST['currentPassword'];
@@ -92,39 +118,22 @@ if ($IsPasswordConfirmed) {
             $addedInfo = false;
         }
     }
-    $query = $query . "AccountStatusID=" . $_POST['accountStatus'] . ", AccountVisibilityID=" .
-        $_POST['accountVisibility'] . ", AccountTypeID=" . $_POST['accountType'] . " ";
+    if ($UserIsSelfSuper) {
+        $query = $query . "AccountStatusID=" . $_POST['accountStatus'] . ", AccountVisibilityID=" .
+            $_POST['accountVisibility'] . " ";
+    } elseif ($UserIsAdmin) {
+        $query = $query . "AccountStatusID=" . $_POST['accountStatus'] . ", AccountVisibilityID=" .
+            $_POST['accountVisibility'] . ", AccountTypeID=" . $_POST['accountType'] . " ";
+    } elseif ($IsOwnAccount) { //User is self.
+        $query = $query . "AccountVisibilityID=" . $_POST['accountVisibility'] . " ";
+    }
+
     $query = $query . "WHERE UserID=" . $_POST['changingUserID'];
     $errorExists = true;
     $errorMsg = "\nGenerated Query: '" . $query . "'";
     $query = mysqli_query($connection, $query) Or die("No Query String");
 }
 
-if (!isset($_GET['UserID']))
-    RedirectTo404(Errors::UserNotGiven);
-//TODO: Only specific people can edit. User and admins in hierarchy.
-if (!isset($_SESSION['UserID']))
-    RedirectTo403(Errors::NotLoggedIn);
-
-//User should be logged in from here on.
-$IsAllowedAccess = false;
-$IsOwnAccount = false;
-$UserIsAdmin = false;
-$UserIsSelfSuper = false;
-//Make a quick query to gather the information. Might as well grab it all just in case.
-$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated FROM Users WHERE UserID = " . $_GET['UserID']);
-if (!isset($query) || !$query) die($connection->error);
-$data = $query->fetch_assoc();
-
-if (($_SESSION['AccountTypeID'] > $data['AccountTypeID'] && $_SESSION['AccountTypeID'] != AccountType::Standard))
-    $UserIsAdmin = true;
-elseif ($_SESSION['AccountTypeID'] == AccountType::SuperAdministrator && $_GET['UserID'] == $_SESSION['UserID']) {
-    $UserIsAdmin = true;
-    $UserIsSelfSuper = true;
-} elseif ($_SESSION['UserID'] == $_GET['UserID'])
-    $IsOwnAccount = true;
-else
-    RedirectTo403(Errors::AdminOnly);
 
 ?>
 <!DOCTYPE HTML>
