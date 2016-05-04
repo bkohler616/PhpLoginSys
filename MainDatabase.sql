@@ -321,13 +321,22 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `Admin_Profile_Change`(emailChng IN
 
 DELIMITER ;
 
-DROP FUNCTION IF EXISTS Pass_Check;
+USE `phpProject`;
+DROP function IF EXISTS `Pass_Check`;
 
-CREATE FUNCTION Pass_Check(userID INT, passW VARCHAR(32), salt CHAR(10))
-  RETURNS VARCHAR(64)
-  BEGIN
-    UPDATE Users
-    SET PasswordHash = SHA2(CONCAT(salt, passW), 256), PasswordSalt = salt
-    WHERE UserID = userID;
-    RETURN 1;
-  END
+DELIMITER $$
+USE `phpProject`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `Pass_Check`(userID INT, passW VARCHAR(32), salt CHAR(10)) RETURNS varchar(64) CHARSET latin1
+BEGIN
+	Declare retPass VarCHAr(64);
+    UPDATE phpProject.users
+    SET users.PasswordHash = SHA2(CONCAT(salt, passW), 256), users.PasswordSalt = salt
+    WHERE (UserID = userID);
+
+    SELECT PasswordHash FROM Users WHERE UserID = userID INTO retPass;
+
+    RETURN retPass;
+END$$
+
+DELIMITER ;
+
