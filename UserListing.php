@@ -29,6 +29,7 @@ $rows = $result->num_rows;
             <tr>
                 <th>UserID</th>
                 <th>Username</th>
+                <th>User Page</th>
                 <th>Edit Account</th>
             </tr>
                 <?php
@@ -39,7 +40,9 @@ $rows = $result->num_rows;
                     $result->data_seek($j);
                     echo '<td> Username: ' . $result->fetch_assoc()['Username'] . '</td>';
                     $result->data_seek($j);
-                    echo '<td> <a class="btn btn-primary btn-block" href="AccountEdit.php?UserID=' . $result->fetch_assoc()['UserID'] . '">Edit Account</a></td>';
+                    $uID = $result->fetch_assoc()['UserID'];
+                    echo '<td><a class="btn btn-primary btn-block" href="User.php?UserID=' . $uID . '">View Users</a></td>';
+                    echo '<td> <a class="btn btn-primary btn-block" href="AccountEdit.php?UserID=' . $uID . '">Edit Account</a></td>';
                     echo '</tr>';
                 }
                 ?>

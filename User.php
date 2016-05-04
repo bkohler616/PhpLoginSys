@@ -28,7 +28,7 @@ if(isset($_GET['UserID']))
         $adminAccess = true;
     }
     else {
-        $query = mysqli_query($connection, "SELECT AccountVisibilityID FROM Users WHERE UserID = " . $_SESSION['UserID']);
+        $query = mysqli_query($connection, "SELECT AccountVisibilityID FROM Users WHERE UserID = " . $_GET['UserID']);
         if (!$query || !isset($query)) die($connection->error);
         $data = $query->fetch_assoc();
         if($data['AccountVisibilityID'] == AccountVisibility::PublicAccount)
@@ -49,7 +49,7 @@ if(isset($_GET['UserID']))
 
 //Should be able to see information now. Spool up info.
 
-$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated FROM Users WHERE UserID = " . $_SESSION['UserID']);
+$query = mysqli_query($connection, "SELECT UserID, AccountTypeID, Username, Email, AccountStatusID, AccountVisibilityID, DateCreated FROM Users WHERE UserID = " . $_GET['UserID']);
 if (!$query || !isset($query)) die($connection->error);
 $data = $query->fetch_assoc();
 ?>
