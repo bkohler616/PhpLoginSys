@@ -47,7 +47,7 @@ if ($IsPasswordConfirmed) {
 
 
     $query = "UPDATE Users SET UserID=" . $_POST['changingUserID'] . ", ";
-    if (isset($_POST['changeUsername'])) {
+    if (isset($_POST['changeUsername']) && $_POST['changeUsername'] == '1') {
         $testUser = preg_match($usernameRegex, $_POST["inputUsername"]);
         if ($testUser == 1) {
             $query = $query . "Username='" . $_POST["inputUsername"] . "', ";
@@ -57,7 +57,7 @@ if ($IsPasswordConfirmed) {
             $addedInfo = false;
         }
     }
-    if (isset($_POST['changeEmail'])) {
+    if (isset($_POST['changeEmail']) && $_POST['changeEmail'] == '1') {
         $errorMsg = $errorMsg . "\nChanging Email...";
         $testEmail = preg_match($emailRegex, $_POST['inputEmail']);
         if ($testEmail == 1) {
@@ -68,7 +68,7 @@ if ($IsPasswordConfirmed) {
             $addedInfo = false;
         }
     }
-    if (isset($_POST['changePassword'])) {
+    if (isset($_POST['changePassword']) && $_POST['changePassword'] == '1') {
         $errorMsg = $errorMsg . "\nChanging Password...";
         if ($_POST['inputConfirmPassword'] == $_POST['inputNewPassword']) {
             $testPassword = preg_match($passwordRegex, $_POST['inputNewPassword']);
@@ -156,7 +156,7 @@ else
             <label class="form-item-heading" for="changeUsername"> Change Username: </label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changeUsername">
+                    <input type="checkbox" name="changeUsername" value="1">
                 </span>
                 <input type="text" name="inputUsername" class="form-control" placeholder="Username"
                        value="<?php echo $data['Username'] ?>">
@@ -165,7 +165,7 @@ else
             <label class="form-item-heading" for="inputEmail">Change Email:</label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changeEmail">
+                    <input type="checkbox" name="changeEmail" value="1">
                 </span>
                 <input type="email" name="inputEmail" class="form-control" placeholder="Email"
                        value="<?php echo $data['Email'] ?>">
@@ -174,7 +174,7 @@ else
             <label class="form-item-heading" for="inputPassword">Change Password:</label>
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" name="changePassword">
+                    <input type="checkbox" name="changePassword" value="1">
                 </span>
                 <input type="password" name="inputNewPassword" class="form-control" placeholder="New Password">
             </div>
