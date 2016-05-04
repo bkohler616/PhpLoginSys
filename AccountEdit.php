@@ -105,11 +105,11 @@ if ($IsPasswordConfirmed) {
                     $password = sha1($_POST['inputNewPassword'], true);
                     $userID = $_POST['changingUserID'];
                     $passQuery = mysqli_query($connection, "SELECT Pass_Check($userID, '$password', $salt'");
-                    if ($passQuery == 1) {
-                        $errorMsg = "\nPassword Query succeeded.";
+                    if (isset($passQuery) && !$passQuery) {
+                        $errorMsg = $errorMsg . "\nPassword Query succeeded: " . $passQuery;
                         $errorExists = true;
                     } else {
-                        $errorMsg = "\nPassword Query failed: " . $passQuery;
+                        $errorMsg = $errorMsg . "\nPassword Query failed: " . $passQuery;
                         $errorExists = true;
                     }
                 } else {

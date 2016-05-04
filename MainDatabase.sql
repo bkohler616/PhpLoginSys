@@ -329,10 +329,9 @@ USE `phpProject`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `Pass_Check`(userID INT, passW VARCHAR(32), salt CHAR(10)) RETURNS varchar(64) CHARSET latin1
 BEGIN
 	Declare retPass VarCHAr(64);
-    UPDATE phpProject.users
-    SET users.PasswordHash = SHA2(CONCAT(salt, passW), 256), users.PasswordSalt = salt
-    WHERE (UserID = userID);
-
+  UPDATE Users
+  SET Users.PasswordHash = SHA2(CONCAT(salt, passW), 256), users.PasswordSalt = salt
+  WHERE UserID = userID;
     SELECT PasswordHash FROM Users WHERE UserID = userID INTO retPass;
 
     RETURN retPass;
